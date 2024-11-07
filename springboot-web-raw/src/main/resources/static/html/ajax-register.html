@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        fieldset {
+            width: 50%;
+        }
+    </style>
+    <script src="/js/ajax.js"></script>
+    <script>
+        // DOM操作，获取表单中提交的数据
+        // type=text,password,number,email  获取value属性
+        // type=radio 手动计算单选框所选的值
+        // select 额外处理
+        // textarea 直接获取value值
+        function parseFormToJSON() {
+            // 动态操作对象属性的方法：
+            // 使用一个字符串值作为对象的属性名称，
+            // 访问或写入对象的属性值
+            // let obj = {
+            // }
+            // let fieldName1 = 'username';
+            // let fieldValue1 = 'admin';
+            // let fieldName2 = 'password';
+            // let fieldValue2 = '123';
+            // obj[fieldName1] = fieldValue1;
+            // obj[fieldName2] = fieldValue2;
+            // console.log(obj);
+
+            let obj = {};
+
+            // 1、获取所有的input组件
+            let $inputs = document.getElementsByTagName('input');
+            for (let $input of $inputs) {
+                // type值为text、password、number、email、date
+                // 直接取出input的name和value属性，作为对象中的一组键值对即可
+                let type = $input.type;
+                switch (type) {
+                    case 'text':
+                    case 'password':
+                    case 'number':
+                    case 'email':
+                    case 'date':
+                        if ($input.id === 'rePassword') {
+                            break;
+                        }
+                        let name = $input.name;
+                        let value = $input.value;
+                        obj[name] = value;
+                        break;
+                    // type值为radio（单选框）
+                    // 如果checked属性为true，就把name和value作为一组键值对添加到对象中
+                    case 'radio':
+                        if ($input.checked) {
+                            let name = $input.name;
+                            let value = $input.value;
+                            obj[name] = value;
+                        }
+                        break;
+                }
+
+
+            }
+            console.log('--------');
+            // 2、获取所有的select组件
+            let $selects = document.getElementsByTagName('select');
+            for (let $select of $selects) {
+                // 读取到下拉列表中被选中选项的索引
+                let selectedIndex = $select.selectedIndex;
+                // 读取到所有的选项列表
+                let $options = $select.options;
+                // 取出被选中的选项的value值，作为请求参数值
+                let value = $options[selectedIndex].value;
+                // 获取到select下拉列表的name属性值
+                let name = $select.name;
+                obj[name] = value;
+            }
+            console.log('--------');
+            // 3、获取所有的textarea组件
+            let $textareas = document.getElementsByTagName('textarea');
+            for (let $textarea of $textareas) {
+                obj[$textarea.name] = $textarea.value;
+            }
+            // 把封装好属性的obj对象，转换为JSON字符串并返回
+            let jsonStr = JSON.stringify(obj);
+            console.log(jsonStr);
+            return jsonStr;
+        }
+
+        // 实现注册功能：
+        // 获取表单中填写的数据，转换为JSON格式，Ajax提交到后台
+        function register() {
+            // 1、调用函数，将表单数据读取并解析为JSON格式
+            let jsonStr = parseFormToJSON();
+            // 2、直接提交Ajax异步请求
+            ajax('post', '/ajax-register', true, jsonStr,
+                (result) => {
+                    console.log(result);
+                    // 3、根据响应结果，做出不同的处理
+                    // 1）如果注册失败，则继续停留在当前页面
+                    if (result.code === 0) {
+                        alert(result.message);
+                    }
+                    // 2）如果注册成功，则自动跳转到登录页面
+                    else if (result.code === 1) {
+                        alert(result.message);
+                        window.location.href = '/html/ajax-login.html';
+                    }
+                }, 'application/json');
+
+        }
+    </script>
+</head>
+<body>
+
+<fieldset>
+    <legend>注册页面</legend>
+    <form id="form">
+        <table>
+            <tr>
+                <td>
+                    <label for="username">
+                        账号：
+                    </label>
+                </td>
+                <td>
+                    <input id="username"
+                           type="text"
+                           name="username"
+                           placeholder="请输入账号...">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="password">
+                        密码：
+                    </label>
+                </td>
+                <td>
+                    <input id="password"
+                           name="password"
+                           type="password"
+                           placeholder="请输入密码...">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="rePassword">
+                        确认密码：
+                    </label>
+                </td>
+                <td>
+                    <input id="rePassword"
+                           type="password"
+                           placeholder="请再次输入密码...">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    性别：
+                </td>
+                <td>
+                    <label for="male">
+                        男
+                    </label>
+                    <input id="male"
+                           value="male"
+                           type="radio"
+                           name="gender">
+                    <label for="female">
+                        女
+                    </label>
+                    <input id="female"
+                           value="female"
+                           type="radio"
+                           name="gender">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="age">
+                        年龄：
+                    </label>
+                </td>
+                <td>
+                    <input id="age"
+                           name="age"
+                           type="number">
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <label for="dob">
+                        出生日期：
+                    </label>
+                </td>
+                <td>
+                    <input id="dob"
+                           name="dob"
+                           type="date">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="email">
+                        邮箱：
+                    </label>
+                </td>
+                <td>
+                    <input id="email"
+                           name="email"
+                           type="email">
+                </td>
+            </tr>
+
+            <!--
+                多行文本框
+            -->
+            <tr>
+                <td>
+                    <label for="introduction">
+                        个人简介：
+                    </label>
+                </td>
+                <td>
+                    <textarea id="introduction"
+                              name="introduction"
+                              rows="5" cols="10"></textarea>
+                </td>
+            </tr>
+
+            <!--
+                <select>下拉列表
+                使用<option>元素定义每个可选项。
+                在select元素中定义multiple属性可以让下拉列表变为可多选状态图。
+                在可多选状态下，按下Ctrl键点击多个想要选中的选项
+            -->
+            <tr>
+                <td>
+                    <label for="education">
+                        学历：
+                    </label>
+                </td>
+                <td>
+
+                    <select id="education"
+                            name="education">
+                        <optgroup label="初级">
+                            <option value="0">小学本科毕业</option>
+                        </optgroup>
+                        <optgroup label="中级">
+                            <option value="1">初中毕业</option>
+                            <option value="2">高中毕业</option>
+                        </optgroup>
+                        <optgroup label="高级">
+                            <option value="3">大专</option>
+                            <option value="4">本科</option>
+                            <option value="5">硕士研究生</option>
+                            <option value="6">博士研究生</option>
+                        </optgroup>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button"
+                           value="注册"
+                           onclick="register()">
+                </td>
+                <td>
+                    <a href="ajax-login.html">
+                        已有账号？立即登录
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+</body>
+</html>

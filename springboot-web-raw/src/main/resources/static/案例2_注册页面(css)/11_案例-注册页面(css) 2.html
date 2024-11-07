@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册页面</title>
+<style>
+    *{
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+
+   	/* 给整个页面设置背景， */
+    body{
+        background: url("img/register_bg.png") no-repeat center;
+        /* 设置内边距 使body上方留出一点空白 */
+        padding-top: 25px;
+    }
+
+	/* 设置显示区域大小、框线、背景色，自动居中 */
+    .rg_layout{
+        width: 900px;
+        height: 500px;
+        border: 8px solid #EEEEEE;
+        background-color: white;
+        /*让div水平居中*/
+        margin: auto;
+    }
+
+	/* 设置左侧div往左浮动，文字信息往中间偏移 */
+    .rg_left{
+        /*border: 1px solid red;*/
+        float: left;
+        margin: 15px;
+    }
+
+    /* "新用户注册" 颜色字体大小设置 */
+    .rg_left > p:first-child{
+        color:#FFD026;
+        font-size: 20px;
+    }
+
+	/* "USER ..." 颜色字体大小设置 */
+    .rg_left > p:last-child{
+        color:#A6A6A6;
+        font-size: 20px;
+    }
+
+    .rg_center{
+        float: left;
+       /* border: 1px solid red;*/
+    }
+
+	/* 设置右半部分靠右浮动 */
+    .rg_right{
+        /*border: 1px solid red;*/
+        float: right;
+        margin: 15px;
+    }
+
+	/* 设置整个右侧字体 */
+    .rg_right > p:first-child{
+    /* .rg_right{ */
+        font-size: 15px;
+    }
+
+    .rg_right p a {
+        color:pink;
+    }
+
+	/* 设置表单中左侧文字信息 */
+    .td_left{
+        width: 100px;
+        text-align: right;
+        height: 45px;
+    }
+
+    /* 设置表单中 输入框 远离 文字描述 */
+    .td_right{
+        padding-left: 50px ;
+    }
+
+	/* 设置所有输入框 宽、高、框体属性 */
+    #username,#password,#rePassword,#email,#name,#tel,#birthday,#checkcode {
+        width: 251px;
+        height: 32px;
+        border: 1px solid #A6A6A6 ;
+        /*设置边框圆角*/
+        border-radius: 5px;
+        padding-left: 10px;
+    }
+
+    #checkcode{
+        width: 110px;
+    }
+
+    #img_check{
+        height: 32px;
+        vertical-align: middle;
+    }
+
+    #btn_sub{
+        width: 150px;
+        height: 40px;
+        background-color: #FFD026;
+        border: 1px solid #FFD026 ;
+    }
+</style>
+
+<script>
+    // 验证表单是否符合要求，是否允许提交
+    // 如果允许提交返回true，否则返回false
+    function verify() {
+        // 设置一个变量，用来记录表单验证的结果
+        let result = true;
+
+        // 1、判断必填项是否都填写了
+        // 获取所有必填值的组件（class值包含required）
+        let $inputs = document.getElementsByClassName('required');
+        // 遍历数组，逐个判断value值是否为空串
+        for (let $input of $inputs) {
+            let value = $input.value;
+            if (value == '') {
+                alert('有必填项未填！');
+                result = false;
+                break;
+            }
+        }
+
+        // 2、判断两次密码输入是否一致
+        // 思路：获取所有的input组件，通过type属性值进行筛选
+        $inputs = document.getElementsByTagName("input");
+        
+        let $password = [];
+        for (let $input of $inputs) {
+            if ($input.type == 'password') {
+                $password.push($input);
+            }
+        }
+        
+        // 判断两个密码框value值是否一致
+        if ($password[0].value != $password[1].value) {
+            alert('两次密码输入不一致！');
+            $password[0].focus();
+            result = false;
+        }
+
+        // 通过result值的读取判断，决定是否要提交表单
+        if (result) {
+            // 获取表单对象有两种常用方式：
+            // 1、常规DOM获取元素操作
+            // 通过id、tagName、class等属性值获取
+            // let $form = document.getElementById('form');
+            // 2、借助特定属性
+            // document文档对象中有一个数组属性叫做forms
+            // forms数组中包含的就是整个网页中所有的表单元素
+            let $form = document.forms[0];
+            
+            // 通过DOM操作设置表单提交路径和提交方法
+            $form.method = 'post';
+            $form.action = "https://www.baidu.com/";
+            // 执行表单提交（和我们手动点击一个提交按钮的效果是一致的）
+            $form.submit();
+        }
+    
+    }
+</script>
+
+</head>
+<body>
+
+<!-- 整个注册页面放到一个div中 -->
+<div class="rg_layout">
+	<!-- 左侧文字信息 -->
+    <div class="rg_left">
+        <p>新用户注册</p>
+        <p>USER REGISTER</p>
+    </div>
+
+	<!-- 中间表单 -->
+    <div class="rg_center">
+        <div class="rg_form">
+            <!-- 定义表单 form -->
+            <form id="form">
+                <table>
+                    <tr>
+                        <td class="td_left"><label for="username">用户名</label></td>
+                        <td class="td_right"><input type="text" class="required" name="username" id="username" placeholder="请输入用户名"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left"><label for="password">密码</label></td>
+                        <td class="td_right"><input type="password" class="required" name="password" id="password" placeholder="请输入密码"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left"><label for="rePassword">确认密码</label></td>
+                        <td class="td_right"><input type="password" class="required" id="rePassword" placeholder="请再次输入密码"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left"><label for="email">Email</label></td>
+                        <td class="td_right"><input type="email" class="required" name="email" id="email" placeholder="请输入邮箱"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left"><label for="name">姓名</label></td>
+                        <td class="td_right"><input type="text" name="name" id="name" placeholder="请输入姓名"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left"><label for="tel">手机号</label></td>
+                        <td class="td_right"><input type="text" name="tel" id="tel" placeholder="请输入手机号"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left"><label>性别</label></td>
+                        <td class="td_right">
+                            <input type="radio" name="gender" value="male"> 男
+                            <input type="radio" name="gender" value="female"> 女
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left"><label for="birthday">出生日期</label></td>
+                        <td class="td_right"><input type="date" name="birthday" id="birthday" placeholder="请输入出生日期"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="td_left"><label for="checkcode" >验证码</label></td>
+                        <td class="td_right"><input type="text" name="checkcode" id="checkcode" placeholder="请输入验证码">
+                            <img id="img_check" src="img/verify_code.jpg">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" align="center"><input type="button" onclick="verify()" id="btn_sub" value="注册"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+    </div>
+
+	<!-- 右侧超链接 -->
+    <div class="rg_right">
+        <p>已有账号?<a href="#">立即登录</a></p>
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

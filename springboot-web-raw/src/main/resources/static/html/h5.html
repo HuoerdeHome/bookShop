@@ -1,0 +1,513 @@
+<!--
+    DOCTYPE 固定的文档类型声明
+    如果只写一个html，就是H5的专属声明方式
+-->
+<!DOCTYPE html>
+<!-- 每个HTML文件，都有一个根元素：html元素 -->
+<!-- lang属性：language，用来指定语言 -->
+<html lang="en">
+<!--
+    在html根元素的内部，其他所有的元素都需要包含在两个子元素中：
+    1）<head>：文档头部
+    通常定义的都是一些元数据/元信息，
+    也就是用户在浏览器中直观地看不到的内容。
+    一般都是以配置为主。
+
+    2）<body>：文档体部
+    用来定义网页的结构、布局、数据。
+    用户在页面上能够直观看到的内容，都定义在体部。
+
+    总结：头部负责配置，体部负责展示
+-->
+<head>
+    <!-- meta元素用来定义网页的一些元数据 -->
+    <meta charset="UTF-8">
+    <!-- title元素用来定义网页的标题 -->
+    <!-- 这个标题会显示在浏览器选项卡上 -->
+    <title>这是我的第一个H5页面</title>
+
+    <!-- 定义一个<style>元素，声明所有的CSS样式 -->
+    <style>
+        /* 选择器：要定义的样式需要作用于文档中的哪些元素 */
+        table { /* 样式表 */
+            /* 表格宽度，px：像素 */
+            width: 400px;
+            /* 表格内⽂字⽔平对⻬⽅式 */
+            text-align: center;
+        }
+
+        table,
+        table td,
+        table th {
+            /* 设置边框为1px的宽度、实线、颜⾊为⿊灰⾊ */
+            border: 1px solid #444444;
+            /* 表格内边框合并 */
+            border-collapse: collapse;
+        }
+
+        /* 将所有class值为custom_btn的元素color统一设为红色 */
+        .custom_btn {
+            background: pink;
+        }
+    </style>
+</head>
+<body>
+<button class="custom_btn">按钮1</button>
+<button class="custom_btn">按钮2</button>
+<button class="custom_btn">按钮3</button>
+<!--
+    容器标签
+    div和span的区别：
+    - div是块状标签：必须在屏幕上独占一行
+    - span是行内标签：只要空间够用，可以和其他元素共用一行
+    上述所说的特征只是元素的默认特征，可以通过CSS进行修改。
+-->
+<div style="background: pink">我是div标签内容</div>
+<div style="background: pink">我是div标签内容</div>
+<span>我是span标签内容</span>
+<span style="background: lightblue">我是span标签内容</span>
+<!--
+    标签组：标题标签 <h1>~<h6>
+    作用：自动为文字添加标题特征
+-->
+<h1>这是一个H1标签！</h1> <!-- 一级标题 -->
+<h2>这是一个H2标签！</h2> <!-- 二级标题 -->
+<h3>这是一个H3标签！</h3> <!-- 三级标题 -->
+<h4>这是一个H4标签！</h4> <!-- 四级标题 -->
+<h5>这是一个H5标签！</h5> <!-- 五级标题 -->
+<h6>这是一个H6标签！</h6> <!-- 六级标题 -->
+
+<!--
+    页面开发原则：遵循HTML标签和属性的语义性。
+    两个例子：
+    1）不要仅仅为了快捷定义一个又大又粗的字体，
+    就乱用<h1>标签
+    2）如果需要定义一个标题标签，一定要用HTML中已经提供的标签，
+    不要自己通过设置样式实现。
+-->
+今天是<h1>星期五</h1>，马上过周末啦！<br>
+
+<!--
+    表格标签：<table>
+    前端页面上显示从后端服务器查询出的数据的主要方式。
+    先定义行，在行中定义单元格。
+    行：<tr>
+    列：<th> 用来定义表头中的单元格
+        <td> 用来定义常规单元格（装数据）
+-->
+<!--
+    HTML4.01版本中为表格设置框线：
+    frame：设置外边框
+        above：上方有线条
+        below：下方有线条
+        lhs：左边有线条
+        rhs：右边有线条
+        box/border：四条边都有
+    rules：设置内边框
+        cols：列线条
+        rows：行线条
+        all：全都有
+-->
+<table>
+    <!--    <table frame="border"-->
+    <!--           rules="all">-->
+    <!--
+        定义表名：<caption>
+    -->
+    <caption title="这是一个表格名称">学生基本信息表</caption>
+    <thead>
+    <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>年龄</th>
+        <th>性别</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>1001</td>
+        <td>张三</td>
+        <td>22</td>
+        <td>男</td>
+    </tr>
+    <tr>
+        <td>1002</td>
+        <td>迪丽热巴迪力木拉提</td>
+        <td>24</td>
+        <td>女</td>
+    </tr>
+    <tr>
+        <td>1003</td>
+        <td>王五</td>
+        <td>23</td>
+        <td>男</td>
+    </tr>
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>
+
+<br><br><br>
+
+<!--
+    method属性：定义提交HTTP请求的方法
+               浏览器默认只支持Get和Post两种
+    action：用来指定表单提交的路径
+            当表单提交时，向哪个URL发送HTTP请求
+-->
+
+<fieldset>
+    <legend>注册页面</legend>
+    <table>
+        <form method="post"
+              action="http://127.0.0.1:8088/?date=2020-01-01">
+            <!--
+                form中最常用的组件：input
+                input具有很多种形体，可以变为不同的组件。
+                通过type属性进行设置。
+                常用type属性值：
+                - text：普通文本框（默认值）
+                - password：密码输入框
+                - radio：定义单选框
+                - checkbox：定义复选框/多选框
+                =======下面是H5新属性=======
+                - date：定义日期选择器
+                - number：数字选择器
+
+                placeholder属性：设置文本框的提示文字
+            -->
+
+            <!--
+                <label>元素：
+                1）代替表单中的一些组件接受焦点
+                当点击<label>元素的时候，绑定的组件就会自动获得焦点。
+                2）能够让用于描述组件功能的文本信息更具有语义性和结构化
+                使用方法：
+                1）把为要关联的组件设置一个id属性值
+                2）定义一个<label>元素，通过for属性关联到某个元素上
+            -->
+            <tr>
+                <td>
+                    <label for="username">
+                        账号：
+                    </label>
+                </td>
+                <td>
+                    <input id="username"
+                           type="text"
+                           name="username"
+                           placeholder="请输入账号..."
+                           value="admin"
+                           onfocus="console.log('组件获取焦点了！')"
+                           onblur="console.log('组件失去焦点了！')">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="password">
+                        密码：
+                    </label>
+                </td>
+                <td>
+                    <input id="password"
+                           name="password"
+                           type="password"
+                           placeholder="请输入密码...">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="rePassword">
+                        确认密码：
+                    </label>
+                </td>
+                <td>
+                    <input id="rePassword"
+                           type="password"
+                           placeholder="请再次输入密码...">
+                </td>
+            </tr>
+            <!--
+                给这两个radio组件配置相同的name属性值，
+                可以实现单选效果。
+            -->
+            <tr>
+            <td>
+                性别：
+            </td>
+                <td>
+
+
+            <label for="male">
+                男
+            </label>
+            <input id="male"
+                   value="male"
+                   type="radio"
+                   name="gender">
+            <label for="female">
+                女
+            </label>
+            <input id="female"
+                   value="female"
+                   type="radio"
+                   name="gender">
+                </td>
+            </tr>
+            <tr>
+            <td>爱好：</td>
+            <td>
+                <label for="music">
+                    音乐
+                </label>
+                <input id="music" value="music" type="checkbox" name="hobby">
+                <label for="game">
+                    电竞
+                </label>
+                <input id="game" value="game" type="checkbox" name="hobby">
+                <label for="sport">
+                    运动
+                </label>
+                <input id="sport" value="sport" type="checkbox" name="hobby">
+                <label for="eat">
+                    吃饭
+                </label>
+                <input id="eat" value="eat" type="checkbox" name="hobby">
+            </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="age">
+                        年龄：
+                    </label>
+                </td>
+                <td>
+                    <input id="age"
+                           name="age"
+                           type="number">
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <label for="dob">
+                        出生日期：
+                    </label>
+                </td>
+
+            <td>
+                <input id="dob"
+                       name="dob"
+                       type="date">
+            </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="email">
+                        邮箱：
+                    </label>
+                </td>
+                <td>
+                    <input id="email"
+                           name="email"
+                           type="email">
+                </td>
+            </tr>
+
+            <!--
+                多行文本框
+            -->
+            <tr>
+                <td>
+                    <label for="introduction">
+                        个人简介：
+                    </label>
+                </td>
+                <td>
+                    <textarea id="introduction"
+                              name="introduction"
+                              rows="5" cols="10"></textarea>
+                </td>
+            </tr>
+
+            <!--
+                <select>下拉列表
+                使用<option>元素定义每个可选项。
+                在select元素中定义multiple属性可以让下拉列表变为可多选状态图。
+                在可多选状态下，按下Ctrl键点击多个想要选中的选项
+            -->
+            <tr>
+                <td>
+                    <label for="education">
+                        学历：
+                    </label>
+                </td>
+                <td>
+
+                    <select id="education"
+                            name="education">
+                        <optgroup label="初级">
+                            <option value="0">小学本科毕业</option>
+                        </optgroup>
+                        <optgroup label="中级">
+                            <option value="1">初中毕业</option>
+                            <option value="2">高中毕业</option>
+                        </optgroup>
+                        <optgroup label="高级">
+                            <option value="3">大专</option>
+                            <option value="4">本科</option>
+                            <option value="5">硕士研究生</option>
+                            <option value="6">博士研究生</option>
+                        </optgroup>
+                    </select>
+                </td>
+            </tr>
+
+            <!--
+                input元素 + type=file属性 上传文件
+            -->
+            <tr>
+                <td>
+                    <label for="avatar">
+                        上传头像：
+                    </label>
+                </td>
+                <td>
+                    <input id="avatar"
+                           name="avatar"
+                           type="file"/>
+                </td>
+            </tr>
+
+            <!--
+                隐藏域：<input type="hidden">
+                功能：
+                1）有些页面布局需要灵活控制某些文本组件是否出现
+                就可以通过JS中的Dom操作修改type属性
+                改为hidden就相当于把组件隐藏掉了，
+                把hidden改为其他，就相当于让它显示出来。
+                2）这样的文本域也可以作为我们功能的实现需求中，
+                保存一些重要数据的组件。
+                例如：从后台查询出的数据中，往往包含主键id字段
+                这些id字段有些时候还需要将它存储起来，
+                因为有可能需要作为某些请求的参数使用。
+            -->
+            <input type="hidden" value="">
+            <br>
+            <!--
+                表单中的按钮，有两种实现思路：
+                1、input标签
+                    1）type=button 普通按钮
+                    如果没有定义value值，普通按钮没有任何显示文字。
+                    普通按钮没有绑定JS事件监听之前，点击之后不会有任何特殊效果。
+                    2）type=submit 提交按钮
+                    按钮上会有一些默认文字，而且点击之后会默认提交表单的效果。
+                    提交表单：把表单中填写的信息收集起来，编写为一封请求报文，
+                    向指定的URL提交HTTP请求（form表单的action属性）。
+                    3）type=reset  重置按钮
+                    点击之后会将当前form表单中所有组件中填写的值清空掉。
+                    能够比较方便地让用户重新填写表单信息，
+                    而且还可以减轻服务器压力。
+                    4）type=image  图片提交按钮
+
+                2、button标签
+                button标签定义按钮语义性比较强。
+            -->
+            <tr>
+                <td colspan="2">
+                    <input type="button"
+                           value="普通按钮"
+                           onclick="alert('这是一个普通按钮')">
+                    <input type="submit"
+                           value="提交按钮">
+                    <input type="reset"
+                           value="重置按钮">
+                </td>
+            </tr>
+            <!--    <input type="image" -->
+            <!--           src="https://spring.io/img/projects/spring-boot.svg">-->
+            <!--
+                定义显示在按钮上的内容，就在button标签体内定义元素或文字
+                type属性定义按钮的类型，有三个可选值：
+                - button：普通按钮
+                - reset： 重置按钮
+                - submit：提交按钮
+                如果没有定义type属性，默认为submit类型。
+
+                <input>和<button>实现标签的区别：
+                1、button更具有语义性
+                2、button按钮显示的内容可以更加丰富，
+                input按钮显示的内容比较单一（只能是文字）
+                原因：input设置按钮显示内容只能依赖于value属性，
+                属性值一般都只能是文本类型内容。
+                但是button定义显示内容是在标签体中定义，
+                所以除了普通文本之外，还可以嵌套其他的html元素。
+            -->
+            <tr>
+                <td colspan="2">
+                    <button type="button">普通按钮</button>
+                    <button type="submit">提交按钮</button>
+                    <button type="reset">重置按钮</button>
+                </td>
+            </tr>
+<!--            <button>-->
+<!--                &lt;!&ndash; 图片标签 &ndash;&gt;-->
+<!--                <img src="javalogo.jpeg"-->
+<!--                     style="width: 20px; height: 20px">-->
+<!--            </button>-->
+<!--            <button>-->
+<!--                今天中午吃什么菜：-->
+<!--                <ol>-->
+<!--                    <li>红烧肉</li>-->
+<!--                    <li>红烧鱼</li>-->
+<!--                    <li>红烧狮子头</li>-->
+<!--                    <li>红烧茄子</li>-->
+<!--                </ol>-->
+<!--            </button>-->
+        </form>
+    </table>
+</fieldset>
+
+    <!--
+        HTML中的空格和空行：
+        以文本的方式敲入的多个空格，不会全部被解释器当做要显示的字符，
+        多余的空格会被当做是代码中适当的留白。
+        在文本内容中只有连续的1个空格是有效的，
+        超过1个空格、回车换行符都会被当做1个空格处理。
+        1）定义多个空格
+        使用空格字符的实体引用：&nbsp;
+        2）定义字符换行
+        I.借助<br>换行标签
+        II.借助一些块级元素实现
+        例如：<div>、<p>
+    -->
+    <div>
+        Hello！&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;World！
+    </div>
+    <div>
+        Hello！<br>
+        World！
+    </div>
+    <div>
+        <div>Hello！</div>
+        <div>World！</div>
+    </div>
+    <div>
+        <p>静夜思
+        <p>李白
+        <p>床前明月光
+        <p>疑是地上霜
+        <p>举头望明月
+        <p>低头思故乡
+    </div>
+
+    <!--
+        1、通用属性
+        2、表单提交参数处理
+    -->
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+</body>
+</html>

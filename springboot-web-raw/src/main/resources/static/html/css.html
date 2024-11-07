@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /* 元素选择器 */
+        div {
+            background: red;
+        }
+        .btn {
+            background: green;
+        }
+        #div {
+            background: orange;
+        }
+
+        div * {
+            background: lemonchiffon;
+        }
+        #div1,.span {
+            background: lightgray;
+            font-size: 100px;
+        }
+
+        /* 允许子元素直接或间接包含在父级元素中的 */
+        /* 选择：全深度匹配 */
+        /*form span {*/
+        /*    background: black;*/
+        /*    color: white;*/
+        /*}*/
+        /* 必须是直接包含在form中的span */
+        form > span {
+            background: black;
+            color: white;
+        }
+
+        a {
+            color: dodgerblue;
+        }
+
+        /* 未点击，未悬停的状态 */
+        a:hover {
+            color: cyan;
+        }
+        /* 正在被点击（按压鼠标未抬起） */
+        a:active {
+            color: yellow;
+        }
+        /* 连接已经被访问过 */
+        a:visited {
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+    友情链接：
+    <p><a href="http://www.baidu.com?username=jack">百度一下，你就知道</a>
+    <p><a href="http://www.baidu.com?username=lucy">百度一下，你就知道</a>
+    <p><a href="http://www.baidu.com?username=lily">百度一下，你就知道</a>
+
+    <form>
+        <div>
+            <button>按钮</button>
+            <span>
+                这是我的表单标题
+            </span>
+        </div>
+    </form>
+
+    <div id="div1">
+        div1
+    </div>
+    <span class="span">
+        span
+    </span>
+
+    <div class="btn">
+        HelloWorld!
+    </div>
+    <br>
+    <div class="btn" id="div">
+        HelloWorld!
+    </div>
+    <br>
+    <div>
+        HelloWorld!
+    </div>
+    <br>
+    <div>
+        HelloWorld!
+    </div>
+</body>
+</html>

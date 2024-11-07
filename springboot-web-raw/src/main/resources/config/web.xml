@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web>
+
+    <!--
+        使用两种元素：
+        <handler>：用来注册一个处理器
+        <handler-mapping>：配置处理器和URL的映射规则
+    -->
+    <handler>
+        <handler-name>login</handler-name>
+        <handler-class>com.briup.demo.handler.LoginHandler</handler-class>
+    </handler>
+    <handler-mapping>
+        <handler-name>login</handler-name>
+        <url-pattern>/login</url-pattern>
+    </handler-mapping>
+    <handler-mapping>
+        <handler-name>login</handler-name>
+        <url-pattern>/register</url-pattern>
+    </handler-mapping>
+
+    <handler>
+        <handler-name>register</handler-name>
+        <handler-class>com.briup.demo.handler.RegisterHandler</handler-class>
+    </handler>
+    <handler-mapping>
+        <handler-name>register</handler-name>
+        <url-pattern>/register</url-pattern>
+    </handler-mapping>
+
+    <handler>
+        <handler-name>ajax</handler-name>
+        <handler-class>com.briup.demo.handler.AjaxHandler</handler-class>
+    </handler>
+    <handler-mapping>
+        <handler-name>ajax</handler-name>
+        <url-pattern>/ajax</url-pattern>
+    </handler-mapping>
+
+    <handler>
+        <handler-name>ajaxLogin</handler-name>
+        <handler-class>com.briup.demo.handler.AjaxLoginHandler</handler-class>
+    </handler>
+    <handler-mapping>
+        <handler-name>ajaxLogin</handler-name>
+        <url-pattern>/ajax-login</url-pattern>
+    </handler-mapping>
+
+
+    <handler>
+        <handler-name>ajaxRegister</handler-name>
+        <handler-class>com.briup.demo.handler.AjaxRegisterHandler</handler-class>
+    </handler>
+    <handler-mapping>
+        <handler-name>ajaxRegister</handler-name>
+        <url-pattern>/ajax-register</url-pattern>
+    </handler-mapping>
+
+    <handler>
+        <handler-name>listUsers</handler-name>
+        <handler-class>com.briup.demo.handler.ListUsersHandler</handler-class>
+    </handler>
+    <handler-mapping>
+        <handler-name>listUsers</handler-name>
+        <url-pattern>/listUsers</url-pattern>
+    </handler-mapping>
+
+
+</web>
+

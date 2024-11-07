@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.briup.demo.mapper.categoryMapper">
+    <resultMap id="categoryResultMap"
+               type="com.briup.demo.entity.Category">
+
+    </resultMap>
+    <sql id="baseQuare">
+        select id, name, description
+        from es_category
+    </sql>
+    
+    <select id="list"
+            resultMap="categoryResultMap">
+        select id, name, description
+            from es_category
+        where parent_id is not null
+    </select>
+
+    <select id="selectById"
+            resultMap="categoryResultMap">
+        <include refid="baseQuare"/>
+        where id =#{id}
+    </select>
+</mapper>

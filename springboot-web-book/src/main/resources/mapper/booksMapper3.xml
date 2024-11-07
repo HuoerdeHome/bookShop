@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.briup.demo.mapper.booksMapper3">
+
+    <resultMap id="bookResult"
+               type="com.briup.demo.entity.Book">
+        <result property="storeNum" column="store_num"/>
+        <result property="categoryId" column="category_id"/>
+        <!-- 关联查询书籍所属的分类信息 -->
+        <association property="category"
+                     select="com.briup.demo.mapper.categoryMapper.selectById"
+                     column="category_id"/>
+    </resultMap>
+
+    <sql id="baseQuery">
+        select id, name, description, author, publisher, price, store_num, status, category_id
+        from es_book3
+    </sql>
+
+    <select id="list"
+            resultMap="bookResult">
+        <include refid="baseQuery"/>
+        <where>
+            <if test="keyword">
+                (
+                name like concat('%', #{keyword}, '%')
+                or author like concat('%', #{keyword}, '%')
+                or publisher like concat('%', #{keyword}, '%')
+                )
+            </if>
+            <if test="categoryId">
+                and category_id = #{categoryId}
+            </if>
+            and deleted = 0
+        </where>
+    </select>
+
+    <select id="selectById"
+            resultMap="bookResult">
+        <include refid="baseQuery"/>
+        where id = #{id}
+        and deleted = 0
+    </select>
+
+    <insert id="insert">
+        insert into es_book3
+        (name, description, author, publisher, price,
+         store_num, status, category_id)
+        values(#{name}, #{description}, #{author}, #{publisher},
+               #{price}, #{storeNum}, #{status}, #{categoryId})
+
+    </insert>
+
+    <update id="update">
+        update es_book3
+        <set>
+            <if test="name">
+                name = #{name},
+            </if>
+            <if test="description">
+                description = #{description},
+            </if>
+            <if test="author">
+                author = #{author},
+            </if>
+            <if test="publisher">
+                publisher = #{publisher},
+            </if>
+            <if test="price">
+                price = #{price},
+            </if>
+            <if test="storeNum">
+                store_num = #{storeNum},
+            </if>
+            <if test="categoryId">
+                category_id = #{categoryId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        update es_book3
+        set deleted = UNIX_TIMESTAMP() # 获取当前时间戳作为逻辑删除标志位值
+        where id in
+        <foreach collection="list"
+                 open="(" close=")"
+                 separator=", "
+                 item="id">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<script>
+
+    // BOM：Browser Object Model，浏览器对象模型
+    // BOM就是JS中的一个内置对象，代表浏览器窗体
+    // 无需声明、无需创建，在任何js环境中都可以直接通过名称访问
+    // BOM对象的名称：window （含义是代表浏览器窗口）
+
+    // 对于BOM对象主要关注两方面的内容：
+    // 1、属性
+    // BOM对象有哪些属性，这些属性代表什么含义，是否可以修改，
+    // 改掉之后，有什么结果？
+
+    // 1）获取浏览器窗口当前的尺寸
+    console.log(window.innerWidth);
+    console.log(window.innerHeight);
+    console.log(innerWidth);
+    console.log(innerHeight);
+
+    // 2）window.location属性
+    // location属性是一个对象类型，表示网页当前的位置
+    // location对象中，有一个href属性用来表示当前资源路径
+    // console.log(window.location.href);
+    console.log(location.href);
+    // 这个值是一个双向属性，既可以通过读取它得知当前位置，
+    // 也可以通过修改它来实现页面跳转。
+    // location.href = 'https://www.baidu.com';
+    
+    // 3）window.history
+    // history也是一个对象，表示浏览记录。
+    // 从当前选项卡访问的第一个页面到最后一个页面的完整过程。
+    // back()函数：固定回退到上一个页面（方向固定，步数固定）
+    // window.history.back();
+    // go()函数：
+    // 需要传递参数，用来表示进入到历史记录中的哪一步。
+    // history.go(1) 前进一步
+    // history.go(2) 前进两步
+    // history.go(-1) 后退一步（等同于back())
+    // history.go(-2) 后退两步 
+    // 以此类推...
+    // window.history.go(1);
+
+    // 4）window.document
+    // document是一个表示整个HTML文档的对象，
+    // 也就是我们所说的DOM
+
+    // 2、函数
+    // BOM对象可以调用哪些函数？有什么作用？
+    // 1）弹窗
+    // alert()：弹出一个提示框，仅仅是为了让用户看到某些信息
+    // window.alert('HelloWorld!');
+    // alert('HelloWorld!');
+    // confirm()：弹出一个确认框
+    // 返回true表示用户点击了确认，
+    // 返回false表示用户点击了取消。
+    // let result = window.confirm('确认要删除这条数据吗？');
+    // console.log(result);
+    // prompt()：提示输入框
+    // 参数1：提示信息
+    // 参数2：在输入框中预填充默认值（可选）
+    // 如果用户点击了取消，则会接收到null返回值
+    // result = window.prompt('请输入要购买的数量：', '1');
+    // console.log(result);
+
+    // 由于window是一个最核心的内置对象，
+    // 所以JS支持一种简写方式：
+    // 访问window对象的所有属性或函数，都可以直接访问。
+
+    // 2）窗口的开启和关闭操作
+    // open()：打开指定窗口
+    // window.open();
+    // close()：关闭当前窗口
+    // window.close();
+
+    // 功能：跳转到百度
+    function jumpToBaidu() {
+        // 从当前页面跳转到百度，放弃原页面
+        window.location.href = 'https://www.baidu.com/';
+    }
+    // 功能：打开百度
+    function openBaidu() {
+        // 打开一个新的选项卡，访问该页面，保留原页面不变
+        window.open('https://www.baidu.com/');
+    }
+
+</script>
+</head>
+<body>
+<!-- 定义一个按钮，并且绑定点击事件 -->
+<button onclick="jumpToBaidu()">点击跳转到百度</button>
+<button onclick="openBaidu()">点击打开百度</button>
+<button onclick="window.close()">点击关闭当前窗口</button>
+</body>
+</html>

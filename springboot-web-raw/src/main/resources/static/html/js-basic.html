@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<!-- 在头部元素中定义一个script元素，用来书写js代码 -->
+<script>
+    // 第一行代码：HelloWorld
+    // 日志输出语句：console.log()，直接输入log + 回车
+    // 类似于Java中的System.out.println();
+    // 输出的内容，可以在浏览器中打开开发者工具（F12）的console面板查看
+    console.log('HelloWorld!');
+
+    // JS中的常用数据类型：
+    // 1、简单数据类型（5种）
+    // 1）Number 数值类型
+    console.log(100);
+    console.log(3.14);
+    // 2）Boolean 布尔类型
+    console.log(true);
+    console.log(false);
+    // 3）String 字符串类型
+    console.log('abc');
+    console.log('def');
+    // 4）Null 空值/空指针
+    console.log(null);
+    // 5）Undefined 未定义类型
+    console.log(undefined);
+    
+    // 2、复杂数据类型（1种）
+    // 1）对象类型
+    // 对象是一个使用{}包含起来的键值对属性集合，
+    // 键和值使用冒号分割，每组属性之间使用逗号分隔
+    console.log({
+        id: 1001, 
+        name: 'Tom'
+    });
+
+
+    // 变量的定义
+    // 1）ES5：var关键字
+    // var a = 10;
+    // 2）ES6：let关键字
+    // let定义的变量作用范围就是当前代码块{}
+    let v = 10;
+    // 弱类型语言可以随时修改该变量中保存的值类型
+    v = 12.05;
+    v = true;
+    v = false;
+    v = 'Hello!';
+    v = {
+        id: 1001,
+        name: 'Tom'
+    };
+
+    // 常量的定义
+    // 使用const关键字
+    const c = 10;
+
+    // 对象的定义和使用
+    // 属性定义的原则：
+    // 1）如果是常规字段，就直接定义值
+    // 常规字段：数值、布尔、字符串
+    // 2）如果包含另一个对象，那就嵌套{}结构
+    let stu = {
+        id: 1001,
+        name: 'Tom',
+        age: 22,
+        gender: 'Male',
+        teacher: {
+            id: 'T201',
+            name: 'Jack',
+            age: 40,
+            salary: 50.00
+
+        }
+    };
+    // 修改对象属性值
+    stu.name = 'Bob';
+    stu.age++;
+
+    // 输出对象属性值
+    console.log(stu.id);
+    console.log(stu.name);
+    console.log(stu.age);
+    console.log(stu.gender);
+    // console.log(stu.teacher.id);
+    // console.log(stu.teacher.name);
+    // console.log(stu.teacher.age);
+    // console.log(stu.teacher.salary);
+    let tea = stu.teacher;
+    console.log(tea.id);
+    console.log(tea.name);
+    console.log(tea.age);
+    console.log(tea.salary);
+
+    // 数组的使用
+    // 1）数组的定义
+    // JS中数组使用[]来表示，元素使用逗号隔开
+    let arr = [10, 20, 30, 40, 50];
+    console.log(arr);
+    // 打印数组的长度
+    console.log(arr.length);
+    // 通过索引访问一些元素
+    console.log(arr[0]);
+    console.log(arr[1]);
+    // 在[5]位置插入一个新元素
+    arr[6] = 60;
+    console.log(length);
+    console.log(arr);
+
+    // 数组对象的可用函数
+    // 1、快速操作数组的首尾位置元素（增删）
+    // push()：向数组的末尾处添加一个元素
+    let element = 10;
+    // arr[arr.length] = element;
+    arr.push(element);
+    console.log(arr);
+    // pop()：删除数组末尾位置元素[length-1]
+    arr.pop();
+    console.log(arr);
+    // unshift()： 向数组的起始位置[0]添加一个元素
+    arr.unshift(element);
+    console.log(arr);
+    // shift()： 删除数组中的首个元素[0]
+    arr.shift();
+    console.log(arr);
+
+    // 2、其他常用函数（对整个数组内的所有元素进行操作）
+    // reverse()：数组反转
+    arr = [1, 2, 3, 4, 5];
+    arr.reverse();
+    console.log(arr);
+    // join()：将数组所有元素用指定符号连接为一个整体
+    let result = arr.join('-');
+    console.log(result);
+
+    // for循环遍历数组中的所有元素
+    for (let i = 0; i < arr.length; i++) {
+        console.log(arr[i]);
+    }
+    console.log("==========");
+    // for (xx in xx)：遍历对象属性
+    // 对于一个数组，如果in方式遍历，拿到的就是每个元素的索引
+    // 
+    for (let i of arr) {
+        console.log(i);
+    }
+    let obj = {
+        id: 1001,
+        name: 'tom',
+        age: 22,
+        gender: 'male'
+    }
+    for (let field in obj) {
+        console.log(field);
+    }
+
+    // 以下方法都需要将一个处理函数作为参数传入
+    // forEach()：遍历数组
+    // 参数：传入一个对元素进行处理的函数（回调函数）
+    // 底层会在循环过程中，每次调用这个函数，处理数组中的一个元素
+    // 1）先定义出函数，再通过标识符引用，传递给forEach()参数列表
+    // function show(obj) {
+    //     console.log(obj);
+    // }
+    // arr.forEach(show);
+    // 2）合二为一：调用forEach()的时候传入匿名函数
+    arr.forEach(function(obj) {
+        console.log(obj);
+    });
+    // ES6语法中可以使用箭头符号代替：
+    arr.forEach((obj) => {
+        console.log(obj);
+    });
+
+    // map()：映射操作，将数组中每个元素映射到一个指定操作上
+    //        每个元素在这个函数中处理的结果最终会被自动收集起来并返回
+    // 将数组中所有的数全部放大十倍
+    let newArr = arr.map((obj) => {
+        return obj * 10;
+    });
+    console.log(newArr);
+    
+    // filter()：过滤
+    // 将所有的偶数筛选出来
+    newArr = arr.filter((obj) => {
+        return (obj & 1) == 0;
+    });
+    console.log(newArr);
+    
+    // arr.sort()：排序
+    // 有两种调用方式：
+    // 1）无参调用，默认按照升序排列
+    newArr = arr.sort();
+    console.log(newArr);
+    // 2）带参数调用，传入比较器函数
+    // 比较器函数实现两个元素大小的比较
+    // 类似于Java中的Comparator比较器的使用
+    arr = [7, 4, 1, 2, 9, 6, 5, 8];
+    arr.sort((a, b) => {
+        // 升序排列
+        // return a - b;
+        // 降序排列
+        return b - a;
+    });
+    console.log(arr);
+    
+    // 模拟forEach()函数的实现
+    // 参数：
+    // 1）要处理的数组
+    // 2）回调函数（表示对每个元素进行何种操作）
+    function forEach(arr, func) {
+        // 遍历arr中的每个元素
+        for (let i = 0; i < arr.length; i++) {
+            func(arr[i]);
+        }
+    }
+    forEach(arr, (obj) => {
+        console.log(obj * 100);
+    });
+
+    // 模拟map()函数的实现
+
+    function map(arr, func) {
+        // 定义一个数组，用来保存每个元素经过回调函数处理后返回的结果
+        let result = [];
+        for (let i = 0; i < arr.length; i++) {
+            result.push(func(arr[i]));
+        }
+        return result;
+    }
+
+    newArr = map(arr, (obj) => {
+        return obj * 1000;
+    });
+    console.log(newArr);
+    
+    // 过滤方法
+    function filter(arr, func) {
+        // 创建一个新数组，用来保存符合条件的元素
+        let result = [];
+        for (let i = 0; i < arr.length; i++) {
+            if (func(arr[i])) {
+                result.push(arr[i]);
+            }
+        }
+        return result;
+    }
+
+    newArr = filter(arr, (obj) => {
+        return (obj & 1) == 1;
+    });
+    console.log(newArr);
+
+</script>
+
+
+</head>
+<body>
+<h1>这是我的第一个JS代码文件！</h1>    
+</body>
+</html>

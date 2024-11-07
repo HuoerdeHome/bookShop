@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<style>
+    input {
+        width: 50px;
+    }
+</style>
+
+<script>
+
+    // 定义一个用于完成计算的函数
+    function calculate() {
+        // 获取到第一个input对象
+        let $input1 = document.getElementById('input1');
+        // 读取出value属性值（输入的第一个加数）
+        let value1 = $input1.value;
+        console.log(typeof value1);
+        // 获取到第二个input对象
+        let $input2 = document.getElementById('input2');
+        // 读取出value属性值（输入的第二个加数）
+        let value2 = $input2.value;
+        console.log(typeof value2);
+        // 将读取到的string类型的value转换为数值类型
+        value1 = Number(value1);
+        value2 = Number(value2);
+
+        // 需要读取到select下拉列表中被选中的选项是哪个
+        // （拿到对应的option对象）
+        // 有两种思路：
+        // 1、通用的元素操作方式
+        // 思路：获取到select下的所有子元素，
+        // 对子元素进行遍历，通过属性值来判断哪个option的selected属性为true
+        // 1）获取到select元素对象 
+        // let $select = document.getElementById('methodSelect');
+        // 2）通过children属性获取select下的所有子元素
+        // let $options = $select.children;
+        // 3）遍历集合，对每个option进行判断
+        // let value = null;
+        // for (let $option of $options) {
+        //     if ($option.selected) {
+        //         value = $option.value;
+        //         break;
+        //     }
+        // }        
+
+        // 2、使用select元素专有一些属性
+        // 思路：通过相关的属性获取到select组件下被选中选项的索引，
+        // 还可以通过相关的属性直接拿到选项集合
+        // 通过索引 + 集合直接获取到被选中选项对象
+
+        // 通过DOM操作获取到select下拉列表对象
+        let $select = document.getElementById('methodSelect');
+        // 通过options属性获取到一个装有所有option子元素的数组
+        let $options = $select.options;
+        // 通过seletedIndex属性获取到被选中option的索引值
+        let index = $select.selectedIndex;
+        // 获取到了被选中的option对象
+        let $option = $options[index];
+        // 取出option的value值
+        let value = $option.value;        
+        
+        // 读取该对象的value值 
+        let result;
+        if (value == '1') {
+            // 加法计算
+            result = value1 + value2;
+        } else if (value == '2') {
+            result = value1 - value2;
+        } else if (value == '3') {
+            result = value1 * value2;
+        } else {
+            // 判断除数为0的情况
+            if (value2 == 0) {
+                alert('除数不能为零！');
+                // 清空第二个操作数输入框的值
+                $input2.value = '';
+                // 自动让第二个操作数框获取焦点
+                $input2.focus();
+                return;
+            }
+            result = value1 / value2;
+        }
+
+        // 获取用于显示结果的input对象
+        let $output = document.getElementById('output');
+        // 设置它的value属性
+        $output.value = result;
+    }
+
+    // 通过DOM操作，为input1和input2绑定事件处理函数
+    window.onload = () => {
+        // let $input1 = document.getElementById('input1');
+        // let $input2 = document.getElementById('input2');
+        // $input1.oninput = $input2.oninput = calculate;
+
+        // 获取所有class值为input的元素对象
+        let $inputs = document.getElementsByClassName('input');
+        for (let $input of $inputs) {
+            $input.oninput = calculate;
+            $input.onfocus = () => {
+                $input.value = '';
+            }
+        }
+    };
+
+    // 定义一个清空所有输入框的方法
+    function clearInputs() {
+        // 根据标签名称获取所有的<input>元素
+        let $inputs = document.getElementsByTagName('input');
+        for (let $input of $inputs) {
+            $input.value = '';
+        }
+    }
+
+</script>
+
+</head>
+<body>
+<!-- 
+    实现一个简易的网页版计算器。
+    version1：
+        提供两个输入框，用于输入两个加数。
+        提供一个按钮，用于点击进行计算。
+        提供第三个输入框，用于显示计算结果。
+        当点击计算按钮的时候，程序读取前两个输入框中的内容，
+        并且完成计算，将结果显示在第三个输入框中。
+    version2：
+        自动计算优化
+    version3：
+        用户自由选择计算方式：加减乘除
+    version4：
+        提供一种机制/功能，能够在计算完毕之后，方便地消除掉输入框中的内容，
+        便于重新输入操作数。
+        1）提供一个重置按钮，点击之后清空操作数输入框 + 结果输入框
+        2）当点击操作数输入框时，先自动清空里面的内容
+-->
+
+<input id="input1" class="input" type="number">
+<!-- ＋ -->
+<select id="methodSelect" 
+        onchange="calculate()">
+    <optgroup label="加法">
+        <option value="1">＋</option>
+    </optgroup>
+    <optgroup label="减法">
+        <option value="2">－</option>
+    </optgroup>
+    <optgroup label="乘法">
+       <option value="3">×</option>
+    </optgroup>
+    <optgroup label="除法">
+        <option value="4">÷</option>
+    </optgroup>
+</select>
+<input id="input2" class="input" type="number">
+＝
+<input id="output" disabled>
+<!-- <button type="button" onclick="calculate()">计算</button> -->
+<button type="button" onclick="clearInputs()">重置</button>
+</body>
+</html>

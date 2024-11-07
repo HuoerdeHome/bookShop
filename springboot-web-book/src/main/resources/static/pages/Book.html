@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>综合案例</title>
+    <link rel="stylesheet" href="../elementui/index.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div id="app-container">
+        <el-container>
+            <!-- 顶部栏 -->
+            <el-header class="header">
+                <div class="logo">
+                    <span class="title">Briup综合案例</span>
+                </div>
+            </el-header>
+            <el-container>
+                <!-- 左侧导航栏 -->
+                <el-aside class="sidebar" style="width: 200px;">
+                    <el-menu default-active="1" class="el-menu-vertical-demo" @select="handleMenuSelect">
+                        <el-menu-item index="1">
+                            <i class="el-icon-document"></i>
+                            <span slot="title" style="color: aliceblue;">图书管理</span>
+                        </el-menu-item>
+                    </el-menu>
+                </el-aside>
+                <!-- 右侧内容区域 -->
+                <el-main class="main" style="flex: 1;">
+                    <!-- 图书管理 -->
+                    <div v-if="activeTab === '1'">
+                        <!-- 搜索 -->
+                        <el-card style="margin-bottom: 25px;">
+                            <el-row style="margin-top: 25px;">
+                                <el-form>
+                                    <el-col :span="6">
+                                        <el-form-item label="关键字">
+                                            <el-input v-model="keyword" placeholder="书名/作者/出版社" style="width: 220px;"
+                                                clearable></el-input>
+                                        </el-form-item>
+                                    </el-col>
+
+                                    <el-col :span="6">
+                                        <el-form-item label="分类">
+                                            <el-cascader :options="categories" :props="{ value: 'id', label: 'name' }"
+                                                @change="handleSearchChange" v-model="categoryId"
+                                                :show-all-levels="false" placeholder="请选择图书分类" clearable></el-cascader>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6" style="min-height:1px;"></el-col>
+                                    <el-col :span="6">
+                                        <el-button icon="el-icon-refresh" @click="reset"
+                                            style="float: right;margin-left: 10px;">重置
+                                        </el-button>
+                                        <el-button type="primary" icon="el-icon-search" @click="getBooks"
+                                            style="float: right;">搜索
+                                        </el-button>
+                                    </el-col>
+                                </el-form>
+                            </el-row>
+                        </el-card>
+
+                        <!-- 操作 -->
+                        <el-row style="margin-bottom: 20px;">
+                            <el-button type="danger" plain icon="el-icon-delete" @click="deleteBatchByIds"
+                                :disabled="multipleSelection.length === 0" style="float: right;margin-left: 10px;">批量删除
+                            </el-button>
+                            <el-button type="success" plain icon="el-icon-plus" @click="add" style="float: right;">添加
+                            </el-button>
+                        </el-row>
+
+                        <!-- 表格 -->
+                        <el-table v-loading="loading" :data="books" @selection-change="handleSelectionChange"
+                            style="width: 100%; margin-top: 20px;" stripe border>
+                            <el-table-column type="selection" align="center" width="60" fixed="left">
+                            </el-table-column>
+                            <el-table-column prop="id" label="图书编号" align="center" width="80" fixed="left">
+                            </el-table-column>
+                            <el-table-column prop="name" label="图书名称" align="center" width="300">
+                            </el-table-column>
+                            <el-table-column prop="description" label="图书描述" align="center" width="300">
+                            </el-table-column>
+                            <el-table-column prop="author" label="图书作者" align="center" width="80">
+                            </el-table-column>
+                            <el-table-column prop="publisher" label="图书出版社" align="center" width="300">
+                            </el-table-column>
+                            <el-table-column prop="price" label="图书价格" align="center" width="80">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.price">￥{{ scope.row.price }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="图书库存" align="center" width="80">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.storeNum">{{ scope.row.storeNum }}本</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="图书状态" align="center" width="100">
+                                <template slot-scope="scope">
+                                    <el-tag v-if="scope.row.status === 0">上架</el-tag>
+                                    <el-tag v-if="scope.row.status === 1" type="info">下架</el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="category.name" label="图书所属分类" align="center" width="120">
+                            </el-table-column>
+                            <el-table-column label="操作" width="300" align="center" fixed="right">
+                                <template slot-scope="scope">
+                                    <el-button type="text" icon="el-icon-edit"
+                                        @click="edit(scope.row.id, scope.row.name)"
+                                        style="color: #DCA550">修改</el-button>
+                                    <el-button type="text" icon="el-icon-delete"
+                                        @click="removeBook(scope.row.id, scope.row.name)"
+                                        style="color:#E47370;">删除</el-button>
+                                    <el-button type="text" v-if="scope.row.status === 0" icon="el-icon-bottom"
+                                        style="color: #919398"
+                                        @click="updateStatus(scope.row.id, scope.row.status, scope.row.name)">下架
+                                    </el-button>
+                                    <el-button type="text" v-else-if="scope.row.status === 1" icon="el-icon-top"
+                                        style="color: #5A9CF8"
+                                        @click="updateStatus(scope.row.id, scope.row.status, scope.row.name)">上架
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <!-- 新增或者修改图书信息弹窗 -->
+                        <el-dialog :title="title" :visible.sync="dialogVisible" width="50%">
+                            <el-form :rules="rules" ref="dataForm" :model="book" label-width="150px"
+                                style="padding-right: 40px;">
+                                <el-form-item label="图书名称" prop="name">
+                                    <el-input v-model="book.name" />
+                                </el-form-item>
+
+                                <el-form-item label="图书详情">
+                                    <el-input v-model="book.description" />
+                                </el-form-item>
+
+                                <el-form-item label="图书作者" prop="author">
+                                    <el-input v-model="book.author" />
+                                </el-form-item>
+
+                                <el-form-item label="图书出版社" prop="publisher">
+                                    <el-input v-model="book.publisher" />
+                                </el-form-item>
+
+                                <el-form-item label="图书价格">
+                                    <el-input v-model="book.price" type="number" min="0" />
+                                </el-form-item>
+
+                                <el-form-item label="图书库存">
+                                    <el-input v-model="book.storeNum" type="number" min="0" />
+                                </el-form-item>
+
+                                <el-form-item label="图书分类">
+                                    <div class="block">
+                                        <el-cascader :options="categories" :props="{ value: 'id', label: 'name' }"
+                                            @change="handleInsertOrUpdateChange" v-model="book.categoryId"
+                                            :show-all-levels="false"></el-cascader>
+                                    </div>
+                                </el-form-item>
+
+                            </el-form>
+                            <span slot="footer" class="dialog-footer">
+                                <el-button @click="cancel" icon="el-icon-refresh-right">取
+                                    消</el-button>
+                                <el-button type="primary" icon="el-icon-check" @click="saveOrUpdate">确
+                                    定</el-button>
+                            </span>
+                        </el-dialog>
+                    </div>
+                </el-main>
+            </el-container>
+        </el-container>
+    </div>
+
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/axios.min.js"></script>
+    <script src="../elementui/index.js"></script>
+    <script src="../js/util.js"></script>
+    <script>
+        new Vue({
+            el: '#app-container',
+            data: {
+                activeTab: '1',                 // 导航栏模块索引
+                keyword: '',                    // 搜索关键字（书名、作者名、出版社）
+                categoryId: '',                 // 搜索分类编号
+                books: [],                      // 所有图书信息
+                book: {},                       // 新增或者修改的图书信息
+                categories: [],                 // 所有分类的集合
+                multipleSelection: [],          // 批量删除的编号
+                loading: true,                  // 表格数据是否显示加载动画
+                dialogVisible: false,           // 新增或者修改弹出框
+                title: '',                      // 新增或者修改弹出框标题
+                // 新增或者修改时非空字段校验规则
+                rules: {
+                    name: [{ required: true, message: '图书名称不能为空', trigger: 'blur' }],
+                    author: [{ required: true, message: '图书作者不能为空', trigger: 'blur' }],
+                    publisher: [{ required: true, message: '图书出版社不能为空', trigger: 'blur' }]
+                }
+            },
+            created() {
+                // 获取图书信息
+                this.getBooks()
+                // 获取图书管理下拉框分类信息
+                this.getCategories()
+            },
+            methods: {
+                // 切换菜单
+                handleMenuSelect(index) {
+                    this.activeTab = index
+                },
+
+                // 表格获取图书信息
+                getBooks() {
+                    axios.get("/book", {
+                        params: {
+                            keyword: this.keyword,
+                            categoryId: this.categoryId
+                        }
+                    }).then(response => {
+                        this.books = response.data.data
+                        this.loading = false
+                    }).catch(error => {
+                        this.$message.error("请求失败，请联系管理员")
+                    })
+                },
+
+                // 下拉框获取分类信息
+                getCategories() {
+                    axios.get("/category").then(response => {
+                        this.categories = getTreeData(response.data.data)
+                    }).catch(error => {
+                        this.$message.error("请求失败，请联系管理员")
+                    })
+                },
+
+                // 搜索时，分类下拉框数据改变回调，为categoryId赋值
+                handleSearchChange(value) {
+                    if (value) {
+                        this.categoryId = value[value.length - 1]
+                    }
+                },
+
+                // 新增/修改时，分类下拉框数据改变回调，为categoryId赋值
+                handleInsertOrUpdateChange(value) {
+                    if (value) {
+                        this.book.categoryId = value[value.length - 1]
+                    }
+                },
+
+                // 点击重置按钮
+                reset() {
+                    this.keyword = ''
+                    this.categoryId = ''
+                    this.getBooks()
+                },
+
+                // 点击添加按钮
+                add() {
+                    this.book = {}
+                    this.title = "添加图书"
+                    this.dialogVisible = true
+                },
+
+                // 点击取消按钮
+                cancel() {
+                    this.$message.warning("取消" + this.title)
+                    this.book = {}
+                    this.dialogVisible = false
+                },
+
+                // 批量删除获取选择的记录编号
+                handleSelectionChange(selection) {
+                    this.multipleSelection = selection.map(item => {
+                        return item.id
+                    })
+                },
+
+                // 点击修改按钮
+                edit(id, name) {
+                    axios.get('/book/' + id).then(response => {
+                        if (response.data.code === 1) {
+                            this.book = response.data.data
+                            this.title = "修改图书"
+                            this.dialogVisible = true
+                        } else {
+                            this.$message.error(response.data.msg)
+                        }
+                    }).catch(error => {
+                        this.$message.error("请求失败，请联系管理员")
+                    })
+                },
+
+                // 点击弹出框的保存按钮
+                saveOrUpdate() {
+                    // 参数校验
+                    this.$refs.dataForm.validate((valid) => {
+                        // 校验成功
+                        if (valid) {
+                            // 根据是否传递id属性判断是修改还是添加
+                            if (!this.book.id) {
+                                // 添加图书
+                                this.addBook()
+                            } else {
+                                // 修改图书
+                                this.modifyBook()
+                            }
+                        } else {
+                            this.$message.error('指定参数不能为空！')
+                            return false
+                        }
+                    })
+                },
+
+                // 保存图书的方法
+                addBook() {
+                    axios.post('/book', this.book)
+                        .then(response => {
+                            if (response.data.code === 1) {
+                                this.$message.success('添加《' + this.book.name + '》成功')
+                                this.dialogVisible = false
+                                this.getBooks()
+                            } else {
+                                this.$message.error(response.data.msg)
+                            }
+                        }).catch(error => {
+                            this.$message.error("请求失败，请联系管理员")
+                        })
+                },
+
+                // 修改图书信息
+                modifyBook() {
+                    axios.put('/book', this.book)
+                        .then(response => {
+                            if (response.data.code === 1) {
+                                this.$message.success('修改《' + this.book.name + '》成功')
+                                this.dialogVisible = false
+                                this.getBooks()
+                                this.book = {}
+                            } else {
+                                this.$message.error(response.data.msg)
+                            }
+                        }).catch(error => {
+                            this.$message.error("请求失败，请联系管理员")
+                        })
+                },
+
+                // 点击上架/下架按钮，修改图书状态
+                updateStatus(id, curStatus, name) {
+                    let status = 0
+                    let msg = ''
+                    if (curStatus === 0) {
+                        msg = '确定要下架《' + name + '》吗？'
+                        status = 1
+                    } else {
+                        msg = '确定要上架《' + name + '》吗？'
+                    }
+                    this.$confirm(msg, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.put('/book', {id: id, status: status}).then(response => {
+                            if (response.data.code === 1) {
+                                if (curStatus === 0) {
+                                    this.$message.success('《' + name + '》下架成功')
+                                } else {
+                                    this.$message.success('《' + name + '》上架成功')
+                                }
+                                this.getBooks()
+                            } else {
+                                this.$message.error(response.data.msg)
+                            }
+                        }).catch(error => {
+                            this.$message.error("请求失败，请联系管理员")
+                        })
+                    }).catch(() => {
+                        if (curStatus === 0) {
+                            this.$message.info('已取消下架《' + name + '》')
+                        } else {
+                            this.$message.info('已取消上架《' + name + '》')
+                        }
+                    })
+                },
+
+                // 点击删除按钮
+                removeBook(id, name) {
+                    this.$confirm('此操作将永久删除《' + name + '》这本书, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.delete('/book/' + id).then(response => {
+                            if (response.data.code === 1) {
+                                this.$message.success('删除《' + name + '》成功')
+                                this.getBooks()
+                            } else {
+                                this.$message.error(response.data.msg)
+                            }
+                        }).catch(error => {
+                            this.$message.error("请求失败，请联系管理员")
+                        })
+                    }).catch(() => {
+                        this.$message.info('已取消删除《' + name + '》')
+                    })
+                },
+
+                // 批量删除获取选择的记录编号
+                handleSelectionChange(selection) {
+                    this.multipleSelection = selection.map(item => {
+                        return item.id
+                    })
+                },
+
+                deleteBatchByIds() {
+                    const length = this.multipleSelection.length
+                    this.$confirm('此操作将永久删除这' + length + '本书籍, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.delete('/book/' + this.multipleSelection.join(","), {
+                            // data : this.multipleSelection
+                        } ).then(response => {
+                            if(response.data.code === 1) {
+                                this.$message.success('批量删除这'+length+'条信息成功')
+                                this.getBooks()
+                            }else {
+                                this.$message.error(response.data.msg)
+                            }
+                        }).catch(error => {
+                            this.$message.error("请求失败，请联系管理员")
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        })
+                    })
+                },
+            }
+        })
+    </script>
+</body>
+
+</html>

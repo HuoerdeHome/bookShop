@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        input {
+            width: 50px;
+        }
+        table, table th, table td {
+            border: 1px solid #000;
+            border-collapse: collapse;
+        }
+    </style>
+    <script src="../js/ajax.js"></script>
+    <script>
+        window.onload = () => {
+            // 页面加载完毕之后，先自动加载一次数据
+            loadData();
+            // 为所有的条件组件绑定oninput事件
+            // 当任何组件发生输入的时候，都自动更新数据
+            let $conditions = document.getElementsByClassName('condition');
+            for (let $condition of $conditions) {
+                $condition.oninput = loadData;
+            }
+        }
+        // 查询数据并渲染到页面中
+        function loadData() {
+            // 通过DOM操作获取到条件组件中用户输入的值
+            let username = value('username');
+            let gender = value('gender');
+            let maxAge = value('maxAge');
+            let minAge = value('minAge');
+            console.log(username);
+            console.log(gender);
+            console.log(maxAge === '');
+            console.log(minAge === '');
+
+            let paramStr = '';
+            if (username !== '') {
+                paramStr += ('username=' + username);
+            }
+            if (gender !== 'none') {
+                if (paramStr !== '') {
+                    paramStr += '&';
+                }
+                paramStr += ('gender=' + gender);
+            }
+            if (maxAge !== '') {
+                if (paramStr !== '') {
+                    paramStr += '&';
+                }
+                paramStr += ('maxAge=' + maxAge);
+            }
+            if (minAge !== '') {
+                if (paramStr !== '') {
+                    paramStr += '&';
+                }
+                paramStr += ('minAge=' + minAge);
+            }
+
+            // 向后台发送请求
+            let method = 'get';
+            let url = '/listUsers';
+            if (paramStr !== '') {
+                url += ('?' + paramStr);
+            }
+            let async = true;
+            ajax(method, url, async, null, (result) => {
+                if (result.code === 1) {
+                    // 把数据取出来
+                    showData(result.data);
+                }
+            }, 'application/x-www-form-urlencoded');
+        }
+
+        // 根据给定的数组数据，渲染表格
+        function showData(data) {
+            let $table = document.getElementById('userTable');
+
+            // 1、渲染出表头
+            $table.innerHTML = '<tr>' +
+                '<th>序号</th>' +
+                '<th>账号</th>' +
+                '<th>密码</th>' +
+                '<th>性别</th>' +
+                '<th>年龄</th>' +
+                '<th>邮箱</th>' +
+                '<th>学历</th>' +
+                '</tr>';
+            // 2、渲染出表体
+            for (let i = 0; i < data.length; i++) {
+                let user = data[i];
+                $table.innerHTML +=
+                    '<tr>' +
+                    '<td>' + (i + 1) + ' </td>' +
+                    '<td>' + user.username + ' </td>' +
+                    '<td>' + user.password + ' </td>' +
+                    '<td>' + user.gender + ' </td>' +
+                    '<td>' + user.age + ' </td>' +
+                    '<td>' + user.email + ' </td>' +
+                    '<td>' + user.education + ' </td>' +
+                    '</tr>'
+            }
+        }
+
+
+
+        // 根据组件的id获取组件的value值
+        function value(id) {
+            let $element = document.getElementById(id);
+            // 根据id获取到指定组件，并且根据组件元素类型进行判断
+            // 1、是input、textarea等类型的元素，
+            // 则直接返回其value值
+            // return document.getElementById(id).value;
+            if ($element.tagName === 'INPUT') {
+                return $element.value;
+            }
+            // 2、是select下拉列表类型的组件，
+            // 找到下拉列表中被选中的选项的value值返回
+            if ($element.tagName === 'SELECT') {
+                return $element.options[$element.selectedIndex].value;
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div>
+    <!-- 定义筛选条件组件 -->
+    用户名关键字<input class="condition" id="username" type="text">
+    性别<select class="condition" id="gender" >
+            <option value="none">---请选择---</option>
+            <option value="male">男</option>
+            <option value="female">女</option>
+       </select>
+    年龄上限：<input class="condition" id="maxAge" type="number">
+    年龄下限：<input class="condition" id="minAge" type="number">
+    <button onclick="loadData()">检索</button>
+</div>
+
+<table id="userTable">
+    <!-- 表格内的元素将来都要通过JS操作DOM，动态地添加 -->
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<script>
+
+    // DOM对象：Document Object Model，文档对象模型
+    // 表示整个HTML文档的对象。
+    // 可以通过对该对象进行操作，读取或修改网页上的所有元素信息。
+    
+    // 如何获取DOM对象？
+    // 1）window.document
+    // 2）document
+
+    // DOM操作中最常见的操作：
+    // 通过不同的方式，获取文档中的元素对象
+    // HTML文档中每个元素，都是JS中的一个对象
+    // 常用的几种获取元素对象的方法：
+    // 1）根据元素的id属性值获取
+    // 唯一的一个直接获取单个元素对象的方法。
+    // document.getElementById()
+    // 下面三个方法，都有可能会匹配到多个元素对象。
+    // 所以下列三个方法（Element后边带s的）返回值都是一个集合
+    // 2）根据元素的class属性值获取
+    // document.getElementsByClassName()
+    // 3）根据元素的name属性值获取
+    // document.getElementsByName()
+    // 4）根据元素的标签类型名称获
+    // document.getElementsByTagName()
+
+    // BOM + 事件监听
+    // window.onload：是一个函数类型的属性
+    // onload事件表示窗口加载完毕，
+    // 赋值给onload属性保存的函数，就会在整个窗口加载完毕之后，
+    // 被自动调用一次（回调函数）
+    // window.onload = () => {
+    //     let $input = document.getElementById('username');
+    //     console.log($input);
+    //     // 直接访问该元素的属性值
+    //     console.log($input.id);
+    //     console.log($input.type);
+    //     console.log($input.value);
+    // };
+
+    function copyValue($input1) {
+        console.log('copyValue()....');
+        // 1、通过DOM操作获取到input1组件
+        // let $input1 = document.getElementById('input1');
+        // 2、获取到它的value属性（用户输入的信息）
+        let value = $input1.value;
+        // 3、通过DOM操作获取到input2组件
+        let $input2 = document.getElementById('input2');
+        // 4、通过设置value属性，将信息完成复制
+        $input2.value = value;
+    }
+        
+    window.onload = function() {
+        let $div = document.getElementById('div');
+        // 以下两个函数可以对某个元素标签体内的内容进行读写
+        // innerText：获取标签体内所有的文本信息
+        // 注意：直接获间接包含的所有文本信息
+        console.log($div.innerText);
+        // innerHTML：获取标签体内所有HTML元素信息
+        // 可以理解为就是HTML代码片段
+        console.log($div.innerHTML);
+
+        // 向后台发送请求，查询学生信息，并且渲染到表格中
+        loadStudents();
+    }
+    function loadStudents() {
+        // 直接定义一个数组，包含若干学生信息
+        // 代替从后端获取到的响应数据
+        let data = [{
+            id: 1001,
+            name: 'Tom',
+            age: 22
+        }, {
+            id: 1002,
+            name: 'Jack',
+            age: 24
+        },{
+            id: 1003,
+            name: 'Lucy',
+            age: 23
+        },{
+            id: 1004,
+            name: 'Lily',
+            age: 22
+        },{
+            id: 1005,
+            name: 'Bob',
+            age: 25
+        },{
+            id: 1006,
+            name: 'Sarah',
+            age: 22
+        }];
+
+        // 获取到table元素
+        let $table = document.getElementById('studentTable');
+        // 先把表头渲染出来
+        $table.innerHTML = 
+            '<tr>'
+            + '<th>学号</th>'
+            + '<th>姓名</th>'
+            + '<th>年龄</th>'
+            + '</tr>';
+        // 遍历学生数据数组，继续渲染下面的数据行
+        for (let student of data) {
+            $table.innerHTML += '<tr>'
+                + '<td>' + student.id + '</td>'
+                + '<td>' + student.name + '</td>'
+                + '<td>' + student.age + '</td>'
+                + '</tr>';
+        }
+    }
+
+    function change() {
+        // DOM操作获取到id为div3的元素
+        let $div = document.getElementById('div3');
+        // 使用字符串的形式编写一段HTML代码片段
+        $div.innerHTML = '<span style=\'font-size: 50px;\'>HiWorld!</span>';
+    }
+
+    function showCities($select) {
+        // 获取被选中的选项索引
+        let index = $select.selectedIndex;
+        // 获取到所有选项列表
+        let $options = $select.options;
+        // 取出被选中的option对象
+        let $option = $options[index];
+        // 取出被选中选项的value值
+        let value = $option.value;
+
+        // 设定城市select中的原数值
+        let cityElement = '<option>-----请选择-----</option>';
+        // 获取到城市select对象
+        let $citySelect = document.getElementById('citySelect');
+        // 根据value值，修改城市select的内容
+        if (value == '1') {
+            // 渲染所有江苏省的城市
+            $citySelect.innerHTML = cityElement + 
+            '<option>南京市</option><option>无锡市</option><option>苏州市</option>';
+        } else if (value == '2') {
+            // 渲染所有浙江省的城市
+            $citySelect.innerHTML = cityElement + 
+            '<option>杭州市</option><option>湖州市</option><option>舟山市</option>';
+        } else if (value == '3') {
+            // 渲染所有山东省的城市
+            $citySelect.innerHTML = cityElement + 
+            '<option>济南市</option><option>泰安市</option><option>青岛市</option>';
+        } else {
+            // 选项回到“请选择”状态
+            $citySelect.innerHTML = cityElement;
+        }
+    }
+
+</script>
+</head>
+<body>
+    <input id="username" 
+        type="text" value="abc">
+
+    <div>
+        <!-- onblur属性用来定义当组件失去焦点时的回调函数 -->
+        <input id="input1" onblur="copyValue(this)">
+        <input id="input2">
+    </div>
+
+    <div id="div" style="background: pink;">
+        <span>Hello!</span>
+    </div>
+
+    <div id="div2">
+        HelloWorld1!
+        <div>
+            HelloWorld2!
+            <div>
+                HelloWorld3!
+                <span>HelloWorld!</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="div3">
+        <span style="font-size: 100px;">
+            HelloWorld!
+        </span>
+    </div>
+    <button onclick="change()">变！！！！</button>
+    <br><br><br>
+    <!-- 选择省份+城市 -->
+     省份：
+     <select onchange="showCities(this)">
+        <option>-----请选择-----</option>
+        <option value="1">江苏省</option>
+        <option value="2">浙江省</option>
+        <option value="3">山东省</option>
+     </select>
+     城市：
+     <select id="citySelect">
+        <option>-----请选择-----</option>
+     </select>
+
+     <table id="studentTable">
+        
+    </table>
+
+
+     <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</body>
+</html>

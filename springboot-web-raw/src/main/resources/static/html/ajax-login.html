@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        fieldset {
+            width: 45%;
+        }
+
+    </style>
+
+    <script src="/js/ajax.js"></script>
+<!--    <script src="../js/ajax.js"></script>-->
+    <script>
+        /**
+         * URL的两种写法：
+         * 1、绝对路径
+         * 语法：
+         * 协议名://主机名:端口号/上下文/资源路径
+         * 例如：
+         * http://localhost:8088/ajax.html
+         *
+         * 优点：比较准确，不依赖于当前所在位置
+         * 缺点：缺少了灵活性，ip和port等信息都直接写死，不利于修改
+         *
+         * 2、相对路径
+         * 1）以斜杠开头
+         * 例如：/login
+         * 这里的"/"代表的是服务器这一级路径，也就是：
+         * http://localhost:8088/
+         * 如果斜杠开头，本质相当于绝对路径，因为斜杠代表的路径前缀是固定的。
+         * 2）不以斜杠开头
+         * url: 'login'
+         * 基于当前页面所在路径。
+         * 例如：http://localhost:8088/page/ajax.html
+         */
+        function login() {
+            let method = 'post';
+            let url = '/ajax-login';
+            let async = true;
+
+            let $username = document.getElementById('username');
+            let $password = document.getElementById('password');
+            // 表单格式数据：
+            // form-data：username=tom&password=123
+            // JSON：
+            // {
+            //     "username": "tom",
+            //     "password": "123"
+            // }
+            // let data = 'username=' + $username.value
+            //         + '&password=' + $password.value;
+
+            // JSON结构数据：
+            // JS中如何将一个JS对象，转变为对应的JSON字符串格式
+            // 1、构建出一个JS对象结构
+            let user = {
+                username: $username.value,
+                password: $password.value
+            };
+            console.log(user);
+            // 2、把JS对象结构转变为真正的JSON字符串
+            let data = JSON.stringify(user);
+            console.log(data);
+
+            ajax(method, url, async, data, (result) => {
+                // 先把响应数据（JSON字符串）转换为一个JS对象
+                console.log(result);
+                if (result.code === 1) {
+                    // 跳转到主页面
+                    location.href = '/html/ajax-index.html';
+                } else if (result.code === 0) {
+                    alert(result.message);
+                }
+            }, 'application/json');
+        }
+    </script>
+</head>
+<body>
+<fieldset>
+    <legend>LOGIN PAGE</legend>
+    <form>
+        <table>
+            <tr>
+                <td>
+                    <label for="username">
+                        账号：
+                    </label>
+                </td>
+                <td>
+                    <input type="text" id="username" name="username">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="password">
+                        密码：
+                    </label>
+                </td>
+                <td>
+                    <input type="password" id="password" name="password">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <button type="button" onclick="login()">登录</button>
+                </td>
+                <td>
+                    <a href="ajax-register.html">没有账号？立即注册</a>
+                </td>
+            </tr>
+
+
+
+        </table>
+
+    </form>
+</fieldset>
+</body>
+</html>

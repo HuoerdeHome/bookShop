@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.briup.springbootwebservelet.mapper.UserMapper">
+    <resultMap id="userResult"
+               type="com.briup.demo.entity.User">
+
+    </resultMap>
+
+    <select id="selectByUsername" resultMap="userResult">
+        select username
+            from t_user
+        where username=#{username}
+
+    </select>
+
+    <insert id="list">
+        select *
+        from t_user
+        <where>
+            <if test="username">
+                username like concat('%', #{username}, '%')
+            </if>
+            <if test="minAge">
+                and age &gt; minAge
+            </if>
+            <if test="maxAge">
+                and age &lt; maxAge
+            </if>
+            <if test="gender">
+                and gender = #{gender}
+            </if>
+        </where>
+    </insert>
+
+    <insert id="insert">
+        insert into t_user
+            (username,password,age,gender,dob,email,introduction,education)
+            values(#{username},#{password},#{age},#{gender},#{dob},#{email},#{introduction},#{education})
+    </insert>
+
+    <delete id="delete">
+        delete from t_user
+        where id=#{id}
+    </delete>
+</mapper>
